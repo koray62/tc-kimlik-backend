@@ -76,55 +76,14 @@ function App() {
   };
 
   return (
-    <div className="form-container">
-      <div style={{ backgroundColor: '#fff', padding: '30px', borderRadius: '10px', boxShadow: '0 4px 8px rgba(0,0,0,0.1)', width: '100%', maxWidth: '400px' }}>
-        <h2 style={{ textAlign: 'center', marginBottom: '20px', color: '#007bff' }}>TC Kimlik No Doğrulama</h2>
-        <form onSubmit={handleSubmit}>
-          <input
-            type="text"
-            placeholder="TC Kimlik No"
-            value={tcNo}
-            onChange={(e) => setTcNo(e.target.value)}
-            maxLength="11"
-            required
-            style={inputStyle}
-          />
-          <input
-            type="text"
-            placeholder="Ad"
-            value={ad}
-            onChange={(e) => setAd(e.target.value)}
-            required
-            style={inputStyle}
-          />
-          <input
-            type="text"
-            placeholder="Soyad"
-            value={soyad}
-            onChange={(e) => setSoyad(e.target.value)}
-            required
-            style={inputStyle}
-          />
-          <input
-            type="number"
-            placeholder="Doğum Yılı"
-            value={dogumYili}
-            onChange={(e) => setDogumYili(e.target.value)}
-            required
-            style={inputStyle}
-          />
-          <button
-            type="submit"
-            style={buttonStyle}
-            disabled={loading}
-          >
-            {loading ? 'Doğrulanıyor...' : 'Doğrula'}
-          </button>
-        </form>
-      </div>
-    </div>
-  );
-}
+<div className="form-container">
+  <div>
+    <h2>TC Kimlik No Doğrulama</h2>
+    <form onSubmit={handleSubmit}>
+      ... (form elemanları burada)
+    </form>
+  </div>
+</div>
 
 const inputStyle = {
   width: '100%',
