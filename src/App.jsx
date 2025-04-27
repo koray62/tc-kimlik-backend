@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import Swal from 'sweetalert2';
+import './App.css'; // İstersen ayrı css dosyasına alabiliriz.
 
 function App() {
   const [tcNo, setTcNo] = useState('');
   const [ad, setAd] = useState('');
   const [soyad, setSoyad] = useState('');
   const [dogumYili, setDogumYili] = useState('');
-  const [sonuc, setSonuc] = useState(null);
-  const [hata, setHata] = useState('');
   const [loading, setLoading] = useState(false);
 
   const isValidTcKimlik = (tc) => {
@@ -23,27 +23,24 @@ function App() {
     }
     const sumAll = digits.slice(0, 10).reduce((acc, val) => acc + val, 0);
     const digit11 = sumAll % 10;
-    if (digit11 !== digits[10]) {
-      return false;
-    }
-    return true;
+    return digit11 === digits[10];
   };
 
   const validateForm = () => {
     if (!isValidTcKimlik(tcNo)) {
-      setHata('Geçerli bir TC Kimlik No giriniz.');
+      Swal.fire('Hata', 'Geçerli bir TC Kimlik No giriniz.', 'warning');
       return false;
     }
     if (!/^[A-Za-zÇĞİÖŞÜçğıöşü\s]+$/.test(ad)) {
-      setHata('Ad sadece harflerden oluşmalıdır.');
+      Swal.fire('Hata', 'Ad sadece harflerden oluşmalıdır.', 'warning');
       return false;
     }
     if (!/^[A-Za-zÇĞİÖŞÜçğıöşü\s]+$/.test(soyad)) {
-      setHata('Soyad sadece harflerden oluşmalıdır.');
+      Swal.fire('Hata', 'Soyad sadece harflerden oluşmalıdır.', 'warning');
       return false;
     }
     if (!/^\d{4}$/.test(dogumYili) || Number(dogumYili) < 1900 || Number(dogumYili) > new Date().getFullYear()) {
-      setHata('Geçerli bir doğum yılı giriniz.');
+      Swal.fire('Hata', 'Geçerli bir doğum yılı giriniz.', 'warning');
       return false;
     }
     return true;
@@ -51,8 +48,6 @@ function App() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setSonuc(null);
-    setHata('');
 
     if (!validateForm()) {
       return;
@@ -67,19 +62,23 @@ function App() {
         dogumYili
       });
 
-      setSonuc(response.data.dogrulama);
+      if (response.data.dogrulama) {
+        Swal.fire('Başarılı', 'Doğrulama başarılı!', 'success');
+      } else {
+        Swal.fire('Başarısız', 'Doğrulama başarısız.', 'error');
+      }
     } catch (error) {
-      setHata('Doğrulama sırasında bir hata oluştu.');
+      Swal.fire('Hata', 'Doğrulama sırasında bir hata oluştu.', 'error');
       console.error(error);
     }
     setLoading(false);
   };
 
   return (
-    <div style={{ padding: '2rem', fontFamily: 'Arial, sans-serif' }}>
-      <h2>TC Kimlik No Doğrulama</h2>
-      <form onSubmit={handleSubmit} style={{ maxWidth: '400px', margin: '0 auto' }}>
-        <div style={{ marginBottom: '10px' }}>
+    <div style={{ minHeight: '100vh', backgroundColor: '#f8f9fa', display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '20px' }}>
+      <div style={{ backgroundColor: '#fff', padding: '30px', borderRadius: '10px', boxShadow: '0 4px 8px rgba(0,0,0,0.1)', width: '100%', maxWidth: '400px' }}>
+        <h2 style={{ textAlign: 'center', marginBottom: '20px', color: '#007bff' }}>TC Kimlik No Doğrulama</h2>
+        <form onSubmit={handleSubmit}>
           <input
             type="text"
             placeholder="TC Kimlik No"
@@ -87,74 +86,64 @@ function App() {
             onChange={(e) => setTcNo(e.target.value)}
             maxLength="11"
             required
-            style={{ width: '100%', padding: '8px' }}
+            style={inputStyle}
           />
-        </div>
-        <div style={{ marginBottom: '10px' }}>
           <input
             type="text"
             placeholder="Ad"
             value={ad}
             onChange={(e) => setAd(e.target.value)}
             required
-            style={{ width: '100%', padding: '8px' }}
+            style={inputStyle}
           />
-        </div>
-        <div style={{ marginBottom: '10px' }}>
           <input
             type="text"
             placeholder="Soyad"
             value={soyad}
             onChange={(e) => setSoyad(e.target.value)}
             required
-            style={{ width: '100%', padding: '8px' }}
+            style={inputStyle}
           />
-        </div>
-        <div style={{ marginBottom: '10px' }}>
           <input
             type="number"
             placeholder="Doğum Yılı"
             value={dogumYili}
             onChange={(e) => setDogumYili(e.target.value)}
             required
-            style={{ width: '100%', padding: '8px' }}
+            style={inputStyle}
           />
-        </div>
-        <button
-          type="submit"
-          style={{
-            width: '100%',
-            padding: '10px',
-            backgroundColor: '#007bff',
-            color: '#fff',
-            border: 'none',
-            cursor: 'pointer'
-          }}
-          disabled={loading}
-        >
-          {loading ? 'Doğrulanıyor...' : 'Doğrula'}
-        </button>
-      </form>
-
-      {loading && (
-        <div style={{ textAlign: 'center', marginTop: '20px' }}>
-          <div className="spinner" style={{ fontSize: '24px' }}>⏳</div>
-        </div>
-      )}
-
-      {sonuc !== null && !loading && (
-        <div style={{ marginTop: '20px', textAlign: 'center' }}>
-          {sonuc ? <p style={{ color: 'green' }}>✅ Doğrulama başarılı!</p> : <p style={{ color: 'red' }}>❌ Doğrulama başarısız.</p>}
-        </div>
-      )}
-
-      {hata && !loading && (
-        <div style={{ marginTop: '20px', color: 'red', textAlign: 'center' }}>
-          <p>{hata}</p>
-        </div>
-      )}
+          <button
+            type="submit"
+            style={buttonStyle}
+            disabled={loading}
+          >
+            {loading ? 'Doğrulanıyor...' : 'Doğrula'}
+          </button>
+        </form>
+      </div>
     </div>
   );
 }
+
+const inputStyle = {
+  width: '100%',
+  padding: '10px',
+  margin: '10px 0',
+  borderRadius: '5px',
+  border: '1px solid #ccc',
+  fontSize: '16px',
+};
+
+const buttonStyle = {
+  width: '100%',
+  padding: '12px',
+  backgroundColor: '#007bff',
+  color: '#fff',
+  border: 'none',
+  borderRadius: '5px',
+  fontSize: '16px',
+  cursor: 'pointer',
+  marginTop: '10px'
+};
 
 export default App;
