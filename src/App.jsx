@@ -1,8 +1,7 @@
-import './App.css';
 import React, { useState } from 'react';
 import axios from 'axios';
 import Swal from 'sweetalert2';
-import './App.css'; // İstersen ayrı css dosyasına alabiliriz.
+import './App.css'; // CSS dosyamızı import ediyoruz
 
 function App() {
   const [tcNo, setTcNo] = useState('');
@@ -76,34 +75,46 @@ function App() {
   };
 
   return (
-<div className="form-container">
-  <div>
-    <h2>TC Kimlik No Doğrulama</h2>
-    <form onSubmit={handleSubmit}>
-      ... (form elemanları burada)
-    </form>
-  </div>
-</div>
-
-const inputStyle = {
-  width: '100%',
-  padding: '10px',
-  margin: '10px 0',
-  borderRadius: '5px',
-  border: '1px solid #ccc',
-  fontSize: '16px',
-};
-
-const buttonStyle = {
-  width: '100%',
-  padding: '12px',
-  backgroundColor: '#007bff',
-  color: '#fff',
-  border: 'none',
-  borderRadius: '5px',
-  fontSize: '16px',
-  cursor: 'pointer',
-  marginTop: '10px'
-};
+    <div className="app-background">
+      <div className="form-container">
+        <h2>TC Kimlik No Doğrulama</h2>
+        <form onSubmit={handleSubmit}>
+          <input
+            type="text"
+            placeholder="TC Kimlik No"
+            value={tcNo}
+            onChange={(e) => setTcNo(e.target.value)}
+            maxLength="11"
+            required
+          />
+          <input
+            type="text"
+            placeholder="Ad"
+            value={ad}
+            onChange={(e) => setAd(e.target.value)}
+            required
+          />
+          <input
+            type="text"
+            placeholder="Soyad"
+            value={soyad}
+            onChange={(e) => setSoyad(e.target.value)}
+            required
+          />
+          <input
+            type="number"
+            placeholder="Doğum Yılı"
+            value={dogumYili}
+            onChange={(e) => setDogumYili(e.target.value)}
+            required
+          />
+          <button type="submit" disabled={loading}>
+            {loading ? 'Doğrulanıyor...' : 'Doğrula'}
+          </button>
+        </form>
+      </div>
+    </div>
+  );
+}
 
 export default App;
