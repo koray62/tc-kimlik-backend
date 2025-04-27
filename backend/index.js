@@ -1,3 +1,11 @@
+const express = require('express');
+const cors = require('cors');
+const app = express();  // <-- app tanımlanıyor
+const port = process.env.PORT || 3000;
+
+app.use(cors());
+app.use(express.json());
+
 app.post('/api/dogrula', (req, res) => {
   const { tcNo, ad, soyad, dogumYili } = req.body;
 
@@ -19,4 +27,12 @@ app.post('/api/dogrula', (req, res) => {
   } else {
     return res.json({ dogrulama: false });
   }
+});
+
+app.get('/', (req, res) => {
+  res.send('TC Kimlik No Doğrulama Backend Çalışıyor ✅');
+});
+
+app.listen(port, () => {
+  console.log(`Server çalışıyor: ${port}`);
 });
