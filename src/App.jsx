@@ -1,3 +1,4 @@
+import './App.css';
 import React, { useState } from 'react';
 import axios from 'axios';
 import Swal from 'sweetalert2';
@@ -75,7 +76,7 @@ function App() {
   };
 
   return (
-    <div style={{ minHeight: '100vh', backgroundColor: '#f8f9fa', display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '20px' }}>
+    <div className="form-container">
       <div style={{ backgroundColor: '#fff', padding: '30px', borderRadius: '10px', boxShadow: '0 4px 8px rgba(0,0,0,0.1)', width: '100%', maxWidth: '400px' }}>
         <h2 style={{ textAlign: 'center', marginBottom: '20px', color: '#007bff' }}>TC Kimlik No Doğrulama</h2>
         <form onSubmit={handleSubmit}>
